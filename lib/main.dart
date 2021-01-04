@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import './question.dart';
-import './answer.dart';
-
+import './quiz.dart';
+import './result.dart';
 void main() {
   runApp(MyApp());
 }
@@ -10,48 +9,58 @@ class MyApp extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
-    return MyAppState();
+    return _MyAppState();
   }
 }
 
-class MyAppState extends State<MyApp> {
-  var questionIndex = 0;
-  void answerQuestion() {
+class _MyAppState extends State<MyApp> {
+  final _questions = const [
+    {
+      'questionText': "What's your favorite color?",
+      'answer': ['Red', 'Yellow', 'Green', 'Grey']
+    },
+    {
+      'questionText': "What's your favorite animal?",
+      'answer': ['Lion', 'Cat', 'Dog']
+    },
+    {
+      'questionText': "What's your favorite instructor",
+      'answer': ['Matt', 'Matt', 'Matt', 'Desir']
+    }
+  ];
+
+  var _questionIndex = 0;
+  void _answerQuestion() {
     setState(
       () {
-        questionIndex = questionIndex + 1;
+        _questionIndex = _questionIndex + 1;
       },
     );
-    print(questionIndex);
+    print(_questionIndex);
+    if (_questionIndex < _questions.length) {
+      print('We have more question !');
+    } else {
+      print("No more question");
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    var questions = [
-      "What's your favorite color?",
-      "What's your favorite animal?",
-    ];
     return MaterialApp(
       home: Scaffold(
-          appBar: AppBar(
-            title: Text(
-              'My first app',
-            ),
+        appBar: AppBar(
+          title: Text(
+            'My first app',
           ),
-          body: Column(
-            children: [
-              Question(questions[questionIndex]),
-              Answer(
-                answerQuestion,
-              ),
-              Answer(
-                answerQuestion,
-              ),
-              Answer(
-                answerQuestion,
-              ),
-            ],
-          )),
+        ),
+        body: _questionIndex < _questions.length
+            ? Quiz(
+                answerQuestion: _answerQuestion,
+                questionIndex: _questionIndex,
+                questions: _questions,
+              )
+            : Result(),
+      ),
     );
   }
 }
